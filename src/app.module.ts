@@ -1,7 +1,9 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { FreelaModule } from './module/freela.module';
+import { FreelaModule } from './freela/module/freela.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { AuthModule } from './auth/module/auth.module';
+import { UserModule } from './users/module/users.module';
 
 @Module({
   imports: [
@@ -19,7 +21,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         )
       })
     }),
-    FreelaModule
+    FreelaModule,
+    AuthModule,
+    UserModule
   ]
 })
 export class AppModule {}

@@ -27,3 +27,27 @@ Content-Type: application/json
     "nome": "Caio Occhi",
     "funcao": "Chef"
 }
+
+### Criar usuário
+POST http://localhost:3000/usuario/create
+Content-Type: application/json
+
+{
+    "nome": "Caio Occhi",
+    "email": "caioocchi5@gmail.com",
+    "senha": "caio1234"
+}
+
+### Criar usuário
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+    "email": "caioocchi5@gmail.com",
+    "senha": "caio1234"
+}
+
+### Criar usuário
+GET http://localhost:3000/auth/profile
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2YTE1OTY5NDNjMzc0YzcwN2M3Mjk3ZjkiLCJlbWFpbCI6ImNhaW9vY2NoaTVAZ21haWwuY29tIiwiaWF0IjoxNzc5ODAwNTk5LCJleHAiOjE3ODA0MDUzOTl9.rVD7-DN-BhyRi8CD7dg5-Eb_ANq3KeA3nt7Y_u5Mn88
+Content-Type: application/json
