@@ -12,7 +12,7 @@ async function bootstrap() {
     );
 
   app.enableCors({
-    origin: 'http://localhost:9000',
+    origin: ['http://localhost:9000', 'http://localhost:9200'],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
   })
