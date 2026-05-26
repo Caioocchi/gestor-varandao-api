@@ -1,0 +1,29 @@
+### Criar nova order
+POST http://localhost:3000/freelas
+Content-Type: application/json
+
+{
+    "nome": "Caio Occhi",
+    "dt_nascimento": "1998-05-07",
+    "pix": "27999157779",
+    "telefone": "27999157779",
+    "cpf": "14883667723",
+    "funcao": "Garçom"
+}
+
+### Retornar todos os freelas
+GET http://localhost:3000/freelas
+Content-Type: application/json
+
+### Excluir Freela pelo ID
+POST http://localhost:3000/freelas/delete/6a14f01d480ca7566e183a85
+Content-Type: application/json
+
+### Alterar Freela pelo ID
+PUT http://localhost:3000/freelas/update/6a14f733d0ead5f80d7adfb4
+Content-Type: application/json
+
+{
+    "nome": "Caio Occhi",
+    "funcao": "Chef"
+}
