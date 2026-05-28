@@ -51,3 +51,103 @@ Content-Type: application/json
 GET http://localhost:3000/auth/profile
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2YTE1OTY5NDNjMzc0YzcwN2M3Mjk3ZjkiLCJlbWFpbCI6ImNhaW9vY2NoaTVAZ21haWwuY29tIiwiaWF0IjoxNzc5ODAwNTk5LCJleHAiOjE3ODA0MDUzOTl9.rVD7-DN-BhyRi8CD7dg5-Eb_ANq3KeA3nt7Y_u5Mn88
 Content-Type: application/json
+
+### Retornar todos os produtos
+GET http://localhost:3000/produto
+
+### Retornar produto por "categoria"
+GET http://localhost:3000/produto/proteina
+
+### Criar evento
+POST http://localhost:3000/eventos
+Content-Type: application/json
+
+{
+    "nome_contratante": "Caio Occhi",
+    "endereco": {
+        "cep": "29102-035",
+        "logradouro": "Avenida Saturnino Rangel Mauro",
+        "numero": "3100",
+        "complemento": "apto 1003",
+        "bairro": "Praia de Itaparica",
+        "cidade": "Vila Velha"
+    },
+    "data": "2026-08-15",
+    "hora": "12:00",
+    "qtde_pessoas": 50,
+    "observacoes": "",
+    "itens": [
+        {
+        "nome": "Ancho",
+        "categoria": "proteina",
+        "quantidade": 10,
+        "unidade": "kg"
+        },
+        {
+        "nome": "Picanha",
+        "categoria": "proteina",
+        "quantidade": 10,
+        "unidade": "kg"
+        },
+        {
+        "nome": "Bandeja preta",
+        "categoria": "limpeza_identidade",
+        "quantidade": 1,
+        "unidade": "un"
+        },
+        {
+        "nome": "Perfex",
+        "categoria": "limpeza_identidade",
+        "quantidade": 2,
+        "unidade": "un"
+        },
+        {
+        "nome": "Pano de prato",
+        "categoria": "limpeza_identidade",
+        "quantidade": 4,
+        "unidade": "un"
+        },
+        {
+        "nome": "Mesa",
+        "categoria": "servico_mesa",
+        "quantidade": 2,
+        "unidade": "un"
+        },
+        {
+        "nome": "Toalha de mesa",
+        "categoria": "servico_mesa",
+        "quantidade": 2,
+        "unidade": "un"
+        },
+        {
+        "nome": "Feijão tropeiro",
+        "categoria": "acompanhamento",
+        "quantidade": 5,
+        "unidade": "kg"
+        },
+        {
+        "nome": "Arroz",
+        "categoria": "acompanhamento",
+        "quantidade": 5,
+        "unidade": "kg"
+        },
+        {
+        "nome": "Vinagrete",
+        "categoria": "acompanhamento",
+        "quantidade": 2,
+        "unidade": "kg"
+        },
+        {
+        "nome": "Farofa",
+        "categoria": "acompanhamento",
+        "quantidade": 1,
+        "unidade": "kg"
+        },
+        {
+        "nome": "Mix de folhas",
+        "categoria": "acompanhamento",
+        "quantidade": 0.5,
+        "unidade": "kg"
+        }
+    ]
+}
