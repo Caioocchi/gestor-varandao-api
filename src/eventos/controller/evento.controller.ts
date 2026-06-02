@@ -20,17 +20,18 @@ export class EventosController {
     }
 
     @Get(':id')
-    async findEventoById(@Param() id: string) {
+    async findEventoById(@Param('id') id: string) {
         return await this.eventoService.findEventoById(id)
     }
 
     @Put(':id')
-    async updateEvento(@Param() id: string, @Body() dto: CreateEventoDTO) {
+    async updateEvento(@Param('id') id: string, @Body() dto: CreateEventoDTO) {
+        console.log('id', id)
         return await this.eventoService.updateEvento(id, dto)
     }
 
     @Post('delete/:id')
-    async deleteEvento(@Param() id: string) {
+    async deleteEvento(@Param('id') id: string) {
         return await this.eventoService.deleteEvento(id)
     }
 }

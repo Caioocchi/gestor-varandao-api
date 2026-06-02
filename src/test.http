@@ -38,7 +38,7 @@ Content-Type: application/json
     "senha": "caio1234"
 }
 
-### Criar usuário
+### Autentica usuário
 POST http://localhost:3000/auth/login
 Content-Type: application/json
 
@@ -57,6 +57,12 @@ GET http://localhost:3000/produto
 
 ### Retornar produto por "categoria"
 GET http://localhost:3000/produto/proteina
+
+### Retornar evento por ID
+GET http://localhost:3000/eventos/6a1c4ed69950b51d5a0f2cfd
+
+### Excluir evento
+POST http://localhost:3000/eventos/delete/6a1c4ed69950b51d5a0f2cfd
 
 ### Criar evento
 POST http://localhost:3000/eventos

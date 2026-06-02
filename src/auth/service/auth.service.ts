@@ -16,7 +16,7 @@ export class AuthService {
 
   async login(dto: LoginDto) {
     const usuario = await this.userModel.findOne({
-      email: dto.email,
+      email: dto.email.toUpperCase(),
     });
 
     if (!usuario) {

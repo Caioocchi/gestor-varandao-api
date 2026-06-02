@@ -16,6 +16,7 @@ export class UserService {
 
     return this.userModel.create({
       ...dto,
+      email: dto.email.toUpperCase(),
       senha: senhaHash,
     });
   }

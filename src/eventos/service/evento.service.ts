@@ -18,7 +18,7 @@ export class EventoService {
     }
 
     async findAllEventos(): Promise<Evento[]> {
-        return await this.eventoModel.find().exec()
+        return await this.eventoModel.find().sort({ data: 1 }).exec()
     }
 
     async findEventoById(id: string): Promise<Evento | null> {

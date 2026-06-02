@@ -25,10 +25,6 @@ export class CreateFreelaDto {
   @IsString()
   cpf!: string;
 
-  @IsNotEmpty()
-  @IsString()
-  funcao!: string;
-
   @IsString()
   urlFoto?: string;
 }

@@ -1,27 +1,29 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { PrimaryGeneratedColumn } from 'typeorm';
+import { Freela, FreelaSchema } from '../../freela/schemas/freela.schema';
 
 @Schema({ _id: false })
 export class Endereco {
-  @Prop({ required: true })
-  cep!: string
-
-  @Prop({ required: true })
-  logradouro!: string
+  @Prop()
+  cep!: string;
 
   @Prop()
-  numero?: string
+  logradouro!: string;
 
   @Prop()
-  complemento?: string
+  numero?: string;
 
-  @Prop({ required: true })
-  bairro!: string
+  @Prop()
+  complemento?: string;
 
-  @Prop({ required: true })
-  cidade!: string
+  @Prop()
+  bairro!: string;
+
+  @Prop()
+  cidade!: string;
 }
 
-export const EnderecoSchema = SchemaFactory.createForClass(Endereco)
+export const EnderecoSchema = SchemaFactory.createForClass(Endereco);
 
 @Schema({ _id: false })
 export class EventoItem {
@@ -38,18 +40,21 @@ export class EventoItem {
   unidade!: string;
 }
 
-export const EventoItemSchema = SchemaFactory.createForClass(EventoItem)
+export const EventoItemSchema = SchemaFactory.createForClass(EventoItem);
 
 @Schema({ timestamps: true })
 export class Evento {
+  @PrimaryGeneratedColumn()
+  _id!: string;
+
   @Prop({ required: true })
   nome_contratante!: string;
 
-  @Prop({ 
-    type: EnderecoSchema,
-    required: true,
-   })
-  endereco!: Endereco; 
+  @Prop({ required: true })
+  telefone!: string;
+
+  @Prop({ type: EnderecoSchema })
+  endereco?: Endereco;
 
   @Prop({ required: true })
   data!: string;
@@ -57,17 +62,31 @@ export class Evento {
   @Prop({ required: true })
   hora!: string;
 
+  @Prop()
+  qtde_pessoas?: number;
+
   @Prop({ required: true })
-  qtde_pessoas!: number;
+  responsavel!: string;
+
+  @Prop({ required: true })
+  menu!: string;
+
+  @Prop({ required: true })
+  bebidas!: boolean;
 
   @Prop()
   observacoes!: string;
 
-  @Prop({ 
+  @Prop()
+  sugestao_qtd!: string;
+
+  @Prop({
     type: [EventoItemSchema],
-    required: true,
-   })
-  itens!: EventoItem[];
+  })
+  itens?: EventoItem[];
+
+  @Prop({type: [FreelaSchema]})
+  freelas?: Freela[]
 }
 
 export const EventoSchema = SchemaFactory.createForClass(Evento);

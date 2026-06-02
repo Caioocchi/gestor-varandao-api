@@ -23,7 +23,7 @@ export class Freela {
   cpf!: string;
 
   @Prop()
-  funcao!: string;
+  funcao?: string;
 
   @Prop()
   urlFoto?: string;

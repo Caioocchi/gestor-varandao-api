@@ -1,13 +1,11 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsString } from 'class-validator';
 
 export class EnderecoDTO {
-  @IsNotEmpty()
   @IsString()
-  cep!: string;
+  cep?: string;
 
-  @IsNotEmpty()
   @IsString()
-  logradouro!: string;
+  logradouro?: string;
 
   @IsString()
   numero?: string;
@@ -15,11 +13,9 @@ export class EnderecoDTO {
   @IsString()
   complemento?: string;
 
-  @IsNotEmpty()
   @IsString()
-  bairro!: string;
+  bairro?: string;
 
-  @IsNotEmpty()
   @IsString()
-  cidade!: string;
+  cidade?: string;
 }
