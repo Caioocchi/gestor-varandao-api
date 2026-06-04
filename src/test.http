@@ -1,4 +1,4 @@
-### Criar nova order
+### Criar novo freela
 POST http://localhost:3000/freelas
 Content-Type: application/json
 
@@ -12,7 +12,15 @@ Content-Type: application/json
 }
 
 ### Retornar todos os freelas
-GET http://localhost:3000/freelas
+GET http://localhost:3000/freelas?pagina=1
+Content-Type: application/json
+
+### Retornar todos os freelas
+GET http://localhost:3000/produto?pagina=1
+Content-Type: application/json
+
+### Retornar Freela por id
+GET http://localhost:3000/freelas/6a15e45880da522f0f4c2327
 Content-Type: application/json
 
 ### Excluir Freela pelo ID
@@ -55,8 +63,11 @@ Content-Type: application/json
 ### Retornar todos os produtos
 GET http://localhost:3000/produto
 
+### Retornar produto por id
+GET http://localhost:3000/produto/6a215a460922ed3b5eb6f1bd
+
 ### Retornar produto por "categoria"
-GET http://localhost:3000/produto/proteina
+GET http://localhost:3000/produto/categoria/proteina
 
 ### Retornar evento por ID
 GET http://localhost:3000/eventos/6a1c4ed69950b51d5a0f2cfd

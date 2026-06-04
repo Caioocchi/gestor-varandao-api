@@ -1,31 +1,22 @@
+
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { PrimaryGeneratedColumn } from 'typeorm';
 
-import { HydratedDocument } from 'mongoose';
-
-export type ProdutoDocument = HydratedDocument<Produto>;
-
-@Schema({
-  timestamps: true,
-})
+@Schema()
 export class Produto {
-  @Prop({
-    required: true,
-  })
+  @PrimaryGeneratedColumn()
+  _id!: string
+
+  @Prop()
   nome!: string;
 
-  @Prop({
-    required: true,
-  })
+  @Prop()
   categoria!: string;
 
-  @Prop({
-    required: true,
-  })
+  @Prop()
   unidade!: string;
 
-  @Prop({
-    default: true,
-  })
+  @Prop()
   ativo!: boolean;
 }
 

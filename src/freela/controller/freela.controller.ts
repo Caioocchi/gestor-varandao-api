@@ -24,7 +24,7 @@ export class FreelaController {
   constructor(private readonly freelaService: FreelaService) {}
 
   @Get()
-  async findAllFreelas(@Query('pagina') pagina: number = 1) {
+  async findAllFreelas(@Query('pagina') pagina?: number) {
     return await this.freelaService.findAllFreelas(pagina);
   }
 

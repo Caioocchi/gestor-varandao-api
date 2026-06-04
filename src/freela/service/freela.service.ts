@@ -16,11 +16,17 @@ export class FreelaService {
     return await createdFreela.save();
   }
 
-  async findAllFreelas(pagina: number = 1): Promise<Freela[]> {
-    const limite = 10
-    const skip = (pagina - 1) * limite
+  async findAllFreelas(pagina?: number): Promise<Freela[]> {
+    const query = this.freelaModel.find().sort({ nome: 1 });
 
-    return await this.freelaModel.find().sort({ nome: 1 }).skip(skip).limit(limite).exec();
+    if (pagina) {
+      const limite = 10;
+      const skip = (pagina - 1) * limite;
+
+      query.skip(skip).limit(limite);
+    }
+
+    return await query.exec();
   }
 
   async findFreelaById(id: string): Promise<Freela | null> {
@@ -30,12 +36,12 @@ export class FreelaService {
   async deleteFreelaById(id: string): Promise<string> {
     await this.freelaModel.findByIdAndDelete(id).exec();
 
-    return 'Freela excluído com sucesso.'
+    return 'Freela excluído com sucesso.';
   }
 
   async updateFreelaById(id: string, dto: CreateFreelaDto): Promise<string> {
-    await this.freelaModel.findByIdAndUpdate(id, dto)
+    await this.freelaModel.findByIdAndUpdate(id, dto);
 
-    return 'Freela alterado com sucesso.'
+    return 'Freela alterado com sucesso.';
   }
 }

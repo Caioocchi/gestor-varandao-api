@@ -4,7 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 
 import { Model } from 'mongoose';
 
-import { Produto, ProdutoDocument } from './produtos/schemas/produto.schema';
+import { Produto } from './produtos/schemas/produto.schema';
 
 import { produtosPadrao } from './produtos.seed';
 
@@ -13,7 +13,7 @@ export class SeedService {
 
   constructor(
     @InjectModel(Produto.name)
-    private produtoModel: Model<ProdutoDocument>,
+    private produtoModel: Model<Produto>,
   ) {}
 
   async seedProdutos() {

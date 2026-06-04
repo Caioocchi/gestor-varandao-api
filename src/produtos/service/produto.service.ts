@@ -27,14 +27,22 @@ export class ProdutoService {
   }
 
   async findByCategoria(categoria: string) {
-    return await this.produtoModel.find().where(categoria);
+    return await this.produtoModel.find({ categoria }).exec();
   }
 
   async createProduto(dto: CreateProdutoDto) {
     return await this.produtoModel.create(dto);
   }
 
+  async findProdutoById(id: string): Promise<Produto | null> {
+    return await this.produtoModel.findById(id).exec();
+  }
+
   async deleteProdutoById(id: string) {
     return await this.produtoModel.findByIdAndDelete(id).exec();
+  }
+
+  async updateProdutoById(id: string, dto: CreateProdutoDto) {
+    return await this.produtoModel.findByIdAndUpdate(id, dto).exec();
   }
 }
