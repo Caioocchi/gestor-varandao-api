@@ -16,8 +16,11 @@ export class FreelaService {
     return await createdFreela.save();
   }
 
-  async findAllFreelas(): Promise<Freela[]> {
-    return await this.freelaModel.find().exec();
+  async findAllFreelas(pagina: number = 1): Promise<Freela[]> {
+    const limite = 10
+    const skip = (pagina - 1) * limite
+
+    return await this.freelaModel.find().sort({ nome: 1 }).skip(skip).limit(limite).exec();
   }
 
   async findFreelaById(id: string): Promise<Freela | null> {

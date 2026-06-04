@@ -67,6 +67,21 @@ export const produtosPadrao = [
     unidade: 'kg', ativo: true,
   },
   {
+    nome: 'Tulipa',
+    categoria: 'proteina',
+    unidade: 'kg', ativo: true,
+  },
+  {
+    nome: 'Ratatouille',
+    categoria: 'proteina',
+    unidade: 'kg', ativo: true,
+  },
+  {
+    nome: 'Paella de frutos do mar',
+    categoria: 'proteina',
+    unidade: 'kg', ativo: true,
+  },
+  {
     nome: 'Coração de frango',
     categoria: 'proteina',
     unidade: 'kg', ativo: true,

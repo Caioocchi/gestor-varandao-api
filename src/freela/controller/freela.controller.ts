@@ -5,6 +5,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
@@ -23,8 +24,8 @@ export class FreelaController {
   constructor(private readonly freelaService: FreelaService) {}
 
   @Get()
-  async findAllFreelas() {
-    return await this.freelaService.findAllFreelas();
+  async findAllFreelas(@Query('pagina') pagina: number = 1) {
+    return await this.freelaService.findAllFreelas(pagina);
   }
 
   @Post()

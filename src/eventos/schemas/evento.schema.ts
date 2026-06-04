@@ -27,51 +27,68 @@ export const EnderecoSchema = SchemaFactory.createForClass(Endereco);
 
 @Schema({ _id: false })
 export class EventoItem {
-  @Prop({ required: true })
+  @Prop()
   nome!: string;
 
-  @Prop({ required: true })
+  @Prop()
   categoria!: string;
 
-  @Prop({ required: true })
+  @Prop()
   quantidade!: number;
 
-  @Prop({ required: true })
+  @Prop()
   unidade!: string;
 }
 
 export const EventoItemSchema = SchemaFactory.createForClass(EventoItem);
+
+@Schema({ _id: false })
+export class QuantidadePessoas {
+  @Prop()
+  quantidade_adultos?: number
+
+  @Prop()
+  quantidade_criancas?: number
+
+  @Prop()
+  quantidade_staffs?: number
+}
+
+export const QuantidadePessoasSchema = SchemaFactory.createForClass(QuantidadePessoas)
 
 @Schema({ timestamps: true })
 export class Evento {
   @PrimaryGeneratedColumn()
   _id!: string;
 
-  @Prop({ required: true })
+  @Prop()
   nome_contratante!: string;
 
-  @Prop({ required: true })
+  @Prop()
   telefone!: string;
 
-  @Prop({ type: EnderecoSchema })
+  @Prop()
   endereco?: Endereco;
 
-  @Prop({ required: true })
+  @Prop()
   data!: string;
 
-  @Prop({ required: true })
-  hora!: string;
+  @Prop()
+  hora_evento!: string;
 
   @Prop()
-  qtde_pessoas?: number;
+  hora_saida!: string;
 
-  @Prop({ required: true })
+  @Prop({ type: QuantidadePessoasSchema })
+  quantidade_pessoas?: QuantidadePessoas;
+
+  @Prop()
   responsavel!: string;
 
-  @Prop({ required: true })
+  @Prop()
   menu!: string;
 
-  @Prop({ required: true })
+  @Prop()
   bebidas!: boolean;
 
   @Prop()
