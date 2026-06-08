@@ -16,8 +16,29 @@ export class FreelaService {
     return await createdFreela.save();
   }
 
-  async findAllFreelas(pagina?: number): Promise<Freela[]> {
-    const query = this.freelaModel.find().sort({ nome: 1 });
+  async findAllFreelas(pagina?: number, pesquisa?: string): Promise<Freela[]> {
+    const filtro: any = {};
+
+    if (pesquisa) {
+      const termo = pesquisa
+        .trim()
+        .replace(/[aáàâãä]/gi, '[aáàâãä]')
+        .replace(/[eéèêẽë]/gi, '[eéèêẽë]')
+        .replace(/[iíìîĩï]/gi, '[iíìîĩï]')
+        .replace(/[oóòôõö]/gi, '[oóòôõö]')
+        .replace(/[uúùûũü]/gi, '[uúùûũü]')
+        .replace(/[cç]/gi, '[cç]');
+
+      filtro.nome = {
+        $regex: termo,
+        $options: 'i',
+      };
+    }
+
+    const query = this.freelaModel
+      .find(filtro)
+      .collation({ locale: 'pt', strength: 1 })
+      .sort({ nome: 1 });
 
     if (pagina) {
       const limite = 10;

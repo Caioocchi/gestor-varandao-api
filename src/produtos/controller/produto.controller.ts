@@ -7,8 +7,11 @@ export class ProdutoController {
   constructor(private readonly produtoService: ProdutoService) {}
 
   @Get()
-  async findAll(@Query('pagina') pagina: number = 1) {
-    return await this.produtoService.findAll(pagina);
+  async findAll(
+    @Query('pagina') pagina: number = 1,
+    @Query('pesquisa') pesquisa?: string,
+  ) {
+    return await this.produtoService.findAll(pagina, pesquisa);
   }
 
   @Get('categoria/:categoria')

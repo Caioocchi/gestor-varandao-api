@@ -11,11 +11,30 @@ export class ProdutoService {
     private produtoModel: Model<Produto>,
   ) {}
 
-  async findAll(pagina: number = 1) {
+  async findAll(pagina: number = 1, pesquisa?: string) {
     const limite = 10;
     const skip = (pagina - 1) * limite;
+
+    const filtro: any = {};
+
+    if (pesquisa) {
+      const termo = pesquisa
+        .trim()
+        .replace(/[aáàâãä]/gi, '[aáàâãä]')
+        .replace(/[eéèêẽë]/gi, '[eéèêẽë]')
+        .replace(/[iíìîĩï]/gi, '[iíìîĩï]')
+        .replace(/[oóòôõö]/gi, '[oóòôõö]')
+        .replace(/[uúùûũü]/gi, '[uúùûũü]')
+        .replace(/[cç]/gi, '[cç]');
+
+      filtro.$or = [
+        { nome: { $regex: termo, $options: 'i' } },
+        { categoria: { $regex: termo, $options: 'i' } }
+      ]
+    }
+
     return await this.produtoModel
-      .find()
+      .find(filtro)
       .collation({ locale: 'pt', strength: 1 })
       .sort({
         categoria: 1,
