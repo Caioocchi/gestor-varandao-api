@@ -9,7 +9,11 @@ import { SeedService } from './seed.service';
 const port = process.env.PORT || 3000;
 
 async function bootstrap() {
+  console.log('Iniciando aplicação...');
+
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
+
+  console.log('Nest criado');
 
   const seedService = app.get(SeedService);
 
@@ -29,5 +33,7 @@ async function bootstrap() {
   app.useStaticAssets(join(__dirname, '..', 'uploads'));
 
   await app.listen(port, "0.0.0.0");
+
+  console.log('Aplicação iniciada');
 }
 bootstrap();
