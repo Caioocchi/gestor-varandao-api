@@ -48,16 +48,17 @@ export const EventoItemSchema = SchemaFactory.createForClass(EventoItem);
 @Schema({ _id: false })
 export class QuantidadePessoas {
   @Prop()
-  quantidade_adultos?: number
+  quantidade_adultos?: number;
 
   @Prop()
-  quantidade_criancas?: number
+  quantidade_criancas?: number;
 
   @Prop()
-  quantidade_staffs?: number
+  quantidade_staffs?: number;
 }
 
-export const QuantidadePessoasSchema = SchemaFactory.createForClass(QuantidadePessoas)
+export const QuantidadePessoasSchema =
+  SchemaFactory.createForClass(QuantidadePessoas);
 
 @Schema({ timestamps: true })
 export class Evento {
@@ -105,8 +106,8 @@ export class Evento {
   })
   itens?: EventoItem[];
 
-  @Prop({type: [FreelaSchema]})
-  freelas?: Freela[]
+  @Prop({ type: [FreelaSchema] })
+  freelas?: Freela[];
 }
 
 export const EventoSchema = SchemaFactory.createForClass(Evento);

@@ -1,11 +1,10 @@
-
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { PrimaryGeneratedColumn } from 'typeorm';
 
 @Schema()
 export class Freela {
   @PrimaryGeneratedColumn()
-  _id!: string
+  _id!: string;
 
   @Prop()
   nome!: string;

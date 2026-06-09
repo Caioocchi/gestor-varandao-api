@@ -6,34 +6,34 @@ import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
 export class EventoService {
-    constructor(
-        @InjectModel(Evento.name)
-        private eventoModel: Model<Evento>
-    ) {}
+  constructor(
+    @InjectModel(Evento.name)
+    private eventoModel: Model<Evento>,
+  ) {}
 
-    async createEvento(dto: CreateEventoDTO): Promise<Evento> {
-        const createdEvento = new this.eventoModel(dto);
+  async createEvento(dto: CreateEventoDTO): Promise<Evento> {
+    const createdEvento = new this.eventoModel(dto);
 
-        return await createdEvento.save();
-    }
+    return await createdEvento.save();
+  }
 
-    async findAllEventos(): Promise<Evento[]> {
-        return await this.eventoModel.find().sort({ data: 1 }).exec()
-    }
+  async findAllEventos(): Promise<Evento[]> {
+    return await this.eventoModel.find().sort({ data: 1 }).exec();
+  }
 
-    async findEventoById(id: string): Promise<Evento | null> {
-        return await this.eventoModel.findById(id).exec()
-    }
+  async findEventoById(id: string): Promise<Evento | null> {
+    return await this.eventoModel.findById(id).exec();
+  }
 
-    async updateEvento(id: string, dto: CreateEventoDTO): Promise<string> {
-        await this.eventoModel.findByIdAndUpdate(id, dto)
+  async updateEvento(id: string, dto: CreateEventoDTO): Promise<string> {
+    await this.eventoModel.findByIdAndUpdate(id, dto);
 
-        return 'Evento alterado com sucesso'
-    }
+    return 'Evento alterado com sucesso';
+  }
 
-    async deleteEvento(id: string): Promise<string> {
-        await this.eventoModel.findByIdAndDelete(id)
+  async deleteEvento(id: string): Promise<string> {
+    await this.eventoModel.findByIdAndDelete(id);
 
-        return 'Evento exlcuído'
-    }
+    return 'Evento exlcuído';
+  }
 }

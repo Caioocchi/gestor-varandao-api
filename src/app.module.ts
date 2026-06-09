@@ -8,6 +8,7 @@ import { EventosModule } from './eventos/module/evento.module';
 import { ProdutoModule } from './produtos/module/produto.module';
 import { Produto, ProdutoSchema } from './produtos/schemas/produto.schema';
 import { SeedService } from './seed.service';
+import { ArquivosModule } from './arquivos/arquivos.module';
 
 @Module({
   imports: [
@@ -32,7 +33,8 @@ import { SeedService } from './seed.service';
     UserModule,
     EventosModule,
     ProdutoModule,
+    ArquivosModule,
   ],
-  providers: [SeedService]
+  providers: [SeedService],
 })
 export class AppModule {}

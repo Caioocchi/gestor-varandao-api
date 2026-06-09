@@ -1,12 +1,20 @@
 import { Type } from 'class-transformer';
-import { IsArray, IsBoolean, IsNotEmpty, IsNumber, IsObject, IsString, ValidateNested } from 'class-validator';
+import {
+  IsArray,
+  IsBoolean,
+  IsNotEmpty,
+  IsNumber,
+  IsObject,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
 import { CreateEventoItemDto } from './eventoItem.dto';
 import { EnderecoDTO } from './endereco.dto';
 
 export class CreateEventoDTO {
   @IsNotEmpty()
   @IsString()
-  _id!: string
+  _id!: string;
 
   @IsNotEmpty()
   @IsString()

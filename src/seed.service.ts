@@ -10,18 +10,15 @@ import { produtosPadrao } from './produtos.seed';
 
 @Injectable()
 export class SeedService {
-
   constructor(
     @InjectModel(Produto.name)
     private produtoModel: Model<Produto>,
   ) {}
 
   async seedProdutos() {
-
     console.log('Verificando produtos...');
 
-    const total =
-      await this.produtoModel.countDocuments();
+    const total = await this.produtoModel.countDocuments();
 
     console.log('Total:', total);
 
@@ -30,9 +27,7 @@ export class SeedService {
       return;
     }
 
-    await this.produtoModel.insertMany(
-      produtosPadrao,
-    );
+    await this.produtoModel.insertMany(produtosPadrao);
 
     console.log('Produtos inseridos!');
   }

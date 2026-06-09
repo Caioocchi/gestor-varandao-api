@@ -1,9 +1,9 @@
-import { IsNotEmpty, IsString, IsDateString } from "class-validator";
+import { IsNotEmpty, IsString, IsDateString } from 'class-validator';
 
 export class CreateFreelaDto {
   @IsNotEmpty()
   @IsString()
-  _id!: string
+  _id!: string;
 
   @IsNotEmpty()
   @IsString()

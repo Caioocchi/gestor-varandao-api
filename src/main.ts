@@ -32,7 +32,7 @@ async function bootstrap() {
 
   app.useStaticAssets(join(__dirname, '..', 'uploads'));
 
-  await app.listen(port, "0.0.0.0");
+  await app.listen(port, '0.0.0.0');
 
   console.log(`Aplicação iniciada na porta ${port}`);
 }

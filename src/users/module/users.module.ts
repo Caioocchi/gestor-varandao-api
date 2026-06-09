@@ -4,14 +4,13 @@ import { User, UserSchema } from '../../users/schemas/user.schema';
 import { UserController } from '../controller/users.controller';
 import { UserService } from '../service/users.service';
 
-
 @Module({
   imports: [
     MongooseModule.forFeature([
-        {
+      {
         name: User.name,
         schema: UserSchema,
-        },
+      },
     ]),
   ],
   controllers: [UserController],

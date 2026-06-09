@@ -29,8 +29,8 @@ export class ProdutoService {
 
       filtro.$or = [
         { nome: { $regex: termo, $options: 'i' } },
-        { categoria: { $regex: termo, $options: 'i' } }
-      ]
+        { categoria: { $regex: termo, $options: 'i' } },
+      ];
     }
 
     return await this.produtoModel

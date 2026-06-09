@@ -7,21 +7,15 @@ import {
   UseGuards,
 } from '@nestjs/common';
 
-import { AuthService }
-from '../service/auth.service';
+import { AuthService } from '../service/auth.service';
 
-import { LoginDto }
-from '../dto/login.dto';
+import { LoginDto } from '../dto/login.dto';
 
-import { JwtAuthGuard }
-from '../guards/jwt-auth.guard';
+import { JwtAuthGuard } from '../guards/jwt-auth.guard';
 
 @Controller('auth')
 export class AuthController {
-
-  constructor(
-    private readonly authService: AuthService,
-  ) {}
+  constructor(private readonly authService: AuthService) {}
 
   @Post('login')
   login(@Body() dto: LoginDto) {
