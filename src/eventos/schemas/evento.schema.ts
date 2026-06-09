@@ -38,6 +38,9 @@ export class EventoItem {
 
   @Prop()
   unidade!: string;
+
+  @Prop()
+  quantidade_retornada?: string;
 }
 
 export const EventoItemSchema = SchemaFactory.createForClass(EventoItem);
