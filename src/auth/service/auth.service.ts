@@ -39,4 +39,30 @@ export class AuthService {
       usuario,
     };
   }
+
+  async getProfile(userId: string) {
+    const usuario = await this.userModel.findById(userId).select('-senha');
+    if (!usuario) {
+      throw new UnauthorizedException('Usuário não encontrado');
+    }
+    return usuario;
+  }
+
+  async changePassword(userId: string, oldPass: string, newPass: string) {
+    const usuario = await this.userModel.findById(userId);
+    if (!usuario) {
+      throw new UnauthorizedException('Usuário não encontrado');
+    }
+
+    const senhaCorreta = await bcrypt.compare(oldPass, usuario.senha);
+    if (!senhaCorreta) {
+      throw new UnauthorizedException('Senha atual incorreta');
+    }
+
+    const hashNovaSenha = await bcrypt.hash(newPass, 10);
+    usuario.senha = hashNovaSenha;
+    await usuario.save();
+
+    return { message: 'Senha alterada com sucesso' };
+  }
 }
