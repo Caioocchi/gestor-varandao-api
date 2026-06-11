@@ -30,7 +30,9 @@ async function bootstrap() {
     credentials: true,
   });
 
-  app.useStaticAssets(join(__dirname, '..', 'uploads'));
+  app.useStaticAssets(join(__dirname, '..', 'uploads'), {
+    redirect: false,
+  });
 
   await app.listen(port, '0.0.0.0');
 
