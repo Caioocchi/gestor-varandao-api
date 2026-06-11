@@ -9,6 +9,7 @@ import {
   UploadedFile,
   UseInterceptors,
   UseGuards,
+  Request,
 } from '@nestjs/common';
 
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -31,9 +32,11 @@ export class FreelaController {
 
   @Get()
   async findAllFreelas(
+    @Request() req,
     @Query('pagina') pagina?: number,
     @Query('pesquisa') pesquisa?: string,
   ) {
+    console.log(req.user);
     return await this.freelaService.findAllFreelas(pagina, pesquisa);
   }
 
