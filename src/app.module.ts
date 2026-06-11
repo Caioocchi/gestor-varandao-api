@@ -7,11 +7,15 @@ import { UserModule } from './users/module/users.module';
 import { EventosModule } from './eventos/module/evento.module';
 import { ProdutoModule } from './produtos/module/produto.module';
 import { Produto, ProdutoSchema } from './produtos/schemas/produto.schema';
+import { ScheduleModule } from '@nestjs/schedule';
 import { SeedService } from './seed.service';
 import { ArquivosModule } from './arquivos/arquivos.module';
+import { NotificationModule } from './eventos/module/notification.module';
+import { FirebaseModule } from './firebase/firebase.module';
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     ConfigModule.forRoot({
       isGlobal: true,
     }),
@@ -34,6 +38,8 @@ import { ArquivosModule } from './arquivos/arquivos.module';
     EventosModule,
     ProdutoModule,
     ArquivosModule,
+    NotificationModule,
+    FirebaseModule,
   ],
   providers: [SeedService],
 })

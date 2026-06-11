@@ -8,6 +8,7 @@ import {
   UploadedFile,
   UseInterceptors,
   BadRequestException,
+  UseGuards,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
@@ -15,7 +16,12 @@ import { extname } from 'path';
 import * as fs from 'fs';
 import { ArquivosService } from './arquivos.service';
 import { CreateWhatsappDto } from './arquivos.dto';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { Roles } from '../auth/decorators/roles.decorator';
 
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles('administrador')
 @Controller('arquivos')
 export class ArquivosController {
   constructor(private readonly arquivosService: ArquivosService) {}

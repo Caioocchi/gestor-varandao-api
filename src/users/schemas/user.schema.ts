@@ -13,6 +13,16 @@ export class User {
 
   @Prop({ required: true })
   senha!: string;
+
+  @Prop({
+    required: true,
+    default: 'padrao',
+    enum: ['administrador', 'padrao'],
+  })
+  role!: string;
+
+  @Prop()
+  fcmToken?: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

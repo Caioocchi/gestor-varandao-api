@@ -8,6 +8,7 @@ import {
   Query,
   UploadedFile,
   UseInterceptors,
+  UseGuards,
 } from '@nestjs/common';
 
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -18,7 +19,12 @@ import { extname } from 'path';
 
 import { FreelaService } from '../service/freela.service';
 import { CreateFreelaDto } from '../dto/freela.dto';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../../auth/guards/roles.guard';
+import { Roles } from '../../auth/decorators/roles.decorator';
 
+@UseGuards(JwtAuthGuard, RolesGuard)
+@Roles('administrador')
 @Controller('freelas')
 export class FreelaController {
   constructor(private readonly freelaService: FreelaService) {}

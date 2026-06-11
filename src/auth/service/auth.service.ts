@@ -33,6 +33,7 @@ export class AuthService {
       sub: usuario._id,
       nome: usuario.nome,
       email: usuario.email,
+      role: usuario.role,
     });
 
     return {
@@ -65,5 +66,15 @@ export class AuthService {
     await usuario.save();
 
     return { message: 'Senha alterada com sucesso' };
+  }
+
+  async registerPushToken(userId: string, token: string) {
+    const usuario = await this.userModel.findById(userId);
+    if (!usuario) {
+      throw new UnauthorizedException('Usuário não encontrado');
+    }
+    usuario.fcmToken = token;
+    await usuario.save();
+    return { message: 'Token de push registrado com sucesso' };
   }
 }

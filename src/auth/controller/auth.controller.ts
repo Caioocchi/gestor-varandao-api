@@ -49,4 +49,13 @@ export class AuthController {
       dto.novaSenha,
     );
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('push-token')
+  async registerPushToken(
+    @Request() req: AuthenticatedRequest,
+    @Body() body: { token: string },
+  ) {
+    return this.authService.registerPushToken(req.user.userId, body.token);
+  }
 }

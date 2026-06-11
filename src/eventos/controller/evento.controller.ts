@@ -1,11 +1,28 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Put,
+  Patch,
+  UseGuards,
+  Request,
+  ForbiddenException,
+  Query,
+} from '@nestjs/common';
 import { EventoService } from '../service/evento.service';
 import { CreateEventoDTO } from '../dto/evento.dto';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../../auth/guards/roles.guard';
+import { Roles } from '../../auth/decorators/roles.decorator';
 
+@UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('eventos')
 export class EventosController {
   constructor(private readonly eventoService: EventoService) {}
 
+  @Roles('administrador')
   @Post()
   async createEvento(@Body() dto: CreateEventoDTO) {
     console.log('dto', dto);
@@ -13,23 +30,88 @@ export class EventosController {
   }
 
   @Get()
-  async findAllEventos() {
-    return await this.eventoService.findAllEventos();
+  async findAllEventos(
+    @Request() req: any,
+    @Query('data') data?: string,
+    @Query('periodo') periodo?: string,
+  ) {
+    const { userId, role, nome } = req.user;
+    const firstNome = nome ? nome.split(' ')[0] : undefined;
+    if (role === 'padrao') {
+      return await this.eventoService.findAllEventos(
+        userId,
+        firstNome,
+        data,
+        periodo,
+      );
+    }
+    return await this.eventoService.findAllEventos(
+      undefined,
+      undefined,
+      data,
+      periodo,
+    );
   }
 
   @Get(':id')
-  async findEventoById(@Param('id') id: string) {
-    return await this.eventoService.findEventoById(id);
+  async findEventoById(@Param('id') id: string, @Request() req: any) {
+    const { userId, role, nome } = req.user;
+    const firstNome = nome ? nome.split(' ')[0] : undefined;
+    const evento = await this.eventoService.findEventoById(id);
+    if (!evento) {
+      return null;
+    }
+    if (role === 'padrao') {
+      if (
+        evento.responsavel !== userId &&
+        evento.responsavel !== nome &&
+        evento.responsavel !== firstNome
+      ) {
+        throw new ForbiddenException(
+          'Você não tem permissão para acessar este evento',
+        );
+      }
+    }
+    return evento;
   }
 
+  @Roles('administrador')
   @Put(':id')
   async updateEvento(@Param('id') id: string, @Body() dto: CreateEventoDTO) {
     console.log('id', id);
     return await this.eventoService.updateEvento(id, dto);
   }
 
+  @Roles('administrador')
   @Post('delete/:id')
   async deleteEvento(@Param('id') id: string) {
     return await this.eventoService.deleteEvento(id);
+  }
+
+  @Roles('administrador', 'padrao')
+  @Patch(':id/conferencia')
+  async updateConferencia(
+    @Param('id') id: string,
+    @Body() body: { itens: { nome: string; quantidade_retornada: number }[] },
+    @Request() req: any,
+  ) {
+    const { userId, role, nome } = req.user;
+    const firstNome = nome ? nome.split(' ')[0] : undefined;
+    const evento = await this.eventoService.findEventoById(id);
+    if (!evento) {
+      return null;
+    }
+    if (role === 'padrao') {
+      if (
+        evento.responsavel !== userId &&
+        evento.responsavel !== nome &&
+        evento.responsavel !== firstNome
+      ) {
+        throw new ForbiddenException(
+          'Você não tem permissão para atualizar a conferência deste evento',
+        );
+      }
+    }
+    return await this.eventoService.updateConferencia(id, body.itens);
   }
 }

@@ -58,3 +58,6 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 # HTTP Client
 src/test.http
 
+# Firebase credentials
+firebase-service-account.json
+
