@@ -98,9 +98,6 @@ export class AuthService {
       usuario.fcmTokens.push({ deviceType, token });
     }
 
-    // Salvar token também na propriedade retrocompatível
-    usuario.fcmToken = token;
-
     // Garante que o documento seja marcado como modificado para arrays no mongoose
     usuario.markModified('fcmTokens');
 

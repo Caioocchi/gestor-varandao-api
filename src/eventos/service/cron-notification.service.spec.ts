@@ -64,12 +64,9 @@ describe('CronNotificationService', () => {
     it('should query active tokens, count events, find birthday freelancers and send notifications', async () => {
       // Mock Users
       userModelMock.find.mockResolvedValue([
-        { fcmToken: 'token-1', fcmTokens: [] },
-        {
-          fcmToken: 'token-2',
-          fcmTokens: [{ deviceType: 'Android', token: 'token-3' }],
-        },
-        { fcmToken: '', fcmTokens: [] },
+        { fcmTokens: [{ deviceType: 'Web', token: 'token-1' }] },
+        { fcmTokens: [{ deviceType: 'Android', token: 'token-3' }] },
+        { fcmTokens: [] },
       ]);
 
       // Mock Event Count
@@ -84,10 +81,7 @@ describe('CronNotificationService', () => {
 
       // Verify users find is called with FCM filter
       expect(userModelMock.find).toHaveBeenCalledWith({
-        $or: [
-          { fcmToken: { $exists: true, $ne: '' } },
-          { fcmTokens: { $exists: true, $not: { $size: 0 } } },
-        ],
+        fcmTokens: { $exists: true, $not: { $size: 0 } },
       });
 
       // Verify event count is called with date range
@@ -110,14 +104,14 @@ describe('CronNotificationService', () => {
       // Verify notifications were sent
       // 1. Weekly events
       expect(sendPushNotificationMock).toHaveBeenCalledWith(
-        ['token-1', 'token-2', 'token-3'],
+        ['token-1', 'token-3'],
         'Eventos da Semana 📅',
         'Você tem 3 eventos agendados para esta semana!',
       );
 
       // 2. Birthday
       expect(sendPushNotificationMock).toHaveBeenCalledWith(
-        ['token-1', 'token-2', 'token-3'],
+        ['token-1', 'token-3'],
         'Aniversariante do Dia! 🎂',
         'Hoje é aniversário de João Silva! Não esqueça de parabenizá-lo(a).',
       );

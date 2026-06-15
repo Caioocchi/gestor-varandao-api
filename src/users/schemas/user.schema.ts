@@ -21,9 +21,6 @@ export class User {
   })
   role!: string;
 
-  @Prop()
-  fcmToken?: string;
-
   @Prop({
     type: [
       {
