@@ -11,20 +11,21 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
-import { extname } from 'path';
-import * as fs from 'fs';
 import { ArquivosService } from './arquivos.service';
 import { CreateWhatsappDto } from './arquivos.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
+import { CloudinaryService } from '../cloudinary/cloudinary.service';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles('administrador')
 @Controller('arquivos')
 export class ArquivosController {
-  constructor(private readonly arquivosService: ArquivosService) {}
+  constructor(
+    private readonly arquivosService: ArquivosService,
+    private readonly cloudinaryService: CloudinaryService,
+  ) {}
 
   /**
    * Retorna os arquivos e as mensagens separados
@@ -68,25 +69,7 @@ export class ArquivosController {
    * Faz upload de um arquivo físico e cria o registro no banco
    */
   @Post('upload')
-  @UseInterceptors(
-    FileInterceptor('file', {
-      storage: diskStorage({
-        destination: (req, file, callback) => {
-          const dest = './uploads/arquivos';
-          // Garante a existência do diretório
-          if (!fs.existsSync(dest)) {
-            fs.mkdirSync(dest, { recursive: true });
-          }
-          callback(null, dest);
-        },
-        filename: (req, file, callback) => {
-          const uniqueSuffix =
-            Date.now() + '-' + Math.round(Math.random() * 1e9);
-          callback(null, uniqueSuffix + extname(file.originalname));
-        },
-      }),
-    }),
-  )
+  @UseInterceptors(FileInterceptor('file'))
   async createArquivo(
     @UploadedFile() file: Express.Multer.File,
     @Body('nomeArquivo') nomeArquivo?: string,
@@ -94,7 +77,13 @@ export class ArquivosController {
     if (!file) {
       throw new BadRequestException('Nenhum arquivo enviado');
     }
-    return await this.arquivosService.createArquivo(file, nomeArquivo);
+    const uploadRes = await this.cloudinaryService.uploadFile(file, 'arquivos');
+    return await this.arquivosService.createArquivo(
+      uploadRes.secure_url,
+      file.mimetype,
+      file.size,
+      nomeArquivo,
+    );
   }
 
   /**

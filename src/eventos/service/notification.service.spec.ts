@@ -111,7 +111,7 @@ describe('NotificationService', () => {
       mockSendEachForMulticast.mockResolvedValue({
         successCount: 1,
         failureCount: 0,
-        responses: [],
+        responses: [{ success: true }, { success: true }],
       });
 
       const module: TestingModule = await Test.createTestingModule({
@@ -127,8 +127,20 @@ describe('NotificationService', () => {
 
       expect(mockGetMessaging).toHaveBeenCalled();
       expect(mockSendEachForMulticast).toHaveBeenCalledWith({
-        notification: { title: 'Title', body: 'Body' },
         tokens: ['token-1', 'token-2'],
+        notification: { title: 'Title', body: 'Body' },
+        webpush: {
+          headers: {
+            Urgency: 'high',
+          },
+          notification: {
+            title: 'Title',
+            body: 'Body',
+            icon: '/icons/icon-128x128.png',
+            badge: '/icons/icon-128x128.png',
+            requireInteraction: true,
+          },
+        },
       });
     });
   });

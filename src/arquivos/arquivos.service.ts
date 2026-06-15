@@ -51,19 +51,19 @@ export class ArquivosService {
    * Armazena as informações de um arquivo físico no banco de dados.
    */
   async createArquivo(
-    file: Express.Multer.File,
+    urlArquivo: string,
+    mimeType: string,
+    tamanho: number,
     nomeArquivo?: string,
   ): Promise<Conteudo> {
     const nomeFinal =
-      nomeArquivo && nomeArquivo.trim()
-        ? nomeArquivo.trim()
-        : file.originalname;
+      nomeArquivo && nomeArquivo.trim() ? nomeArquivo.trim() : 'Arquivo';
     const novo = new this.conteudoModel({
       tipo: TipoConteudo.ARQUIVO,
       nomeArquivo: nomeFinal,
-      mimeType: file.mimetype,
-      urlArquivo: `arquivos/${file.filename}`,
-      tamanho: file.size,
+      mimeType,
+      urlArquivo,
+      tamanho,
       ativo: true,
     });
     return await novo.save();

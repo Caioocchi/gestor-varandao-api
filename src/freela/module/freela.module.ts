@@ -5,6 +5,7 @@ import { FreelaService } from '../service/freela.service';
 import { FreelaController } from '../controller/freela.controller';
 
 import { Freela, FreelaSchema } from '../schemas/freela.schema';
+import { CloudinaryModule } from '../../cloudinary/cloudinary.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { Freela, FreelaSchema } from '../schemas/freela.schema';
         schema: FreelaSchema,
       },
     ]),
+    CloudinaryModule,
   ],
   controllers: [FreelaController],
   providers: [FreelaService],

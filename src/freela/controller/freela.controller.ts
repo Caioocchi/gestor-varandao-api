@@ -14,21 +14,21 @@ import {
 
 import { FileInterceptor } from '@nestjs/platform-express';
 
-import { diskStorage } from 'multer';
-
-import { extname } from 'path';
-
 import { FreelaService } from '../service/freela.service';
 import { CreateFreelaDto } from '../dto/freela.dto';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../../auth/guards/roles.guard';
 import { Roles } from '../../auth/decorators/roles.decorator';
+import { CloudinaryService } from '../../cloudinary/cloudinary.service';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles('administrador')
 @Controller('freelas')
 export class FreelaController {
-  constructor(private readonly freelaService: FreelaService) {}
+  constructor(
+    private readonly freelaService: FreelaService,
+    private readonly cloudinaryService: CloudinaryService,
+  ) {}
 
   @Roles('administrador', 'padrao')
   @Get()
@@ -42,25 +42,14 @@ export class FreelaController {
   }
 
   @Post()
-  @UseInterceptors(
-    FileInterceptor('urlFoto', {
-      storage: diskStorage({
-        destination: './uploads/freelas',
-
-        filename: (req, file, callback) => {
-          const nomeArquivo = Date.now() + extname(file.originalname);
-
-          callback(null, nomeArquivo);
-        },
-      }),
-    }),
-  )
+  @UseInterceptors(FileInterceptor('urlFoto'))
   async createFreela(
     @UploadedFile() foto: Express.Multer.File,
     @Body() dto: CreateFreelaDto,
   ) {
     if (foto) {
-      dto.urlFoto = foto.filename;
+      const result = await this.cloudinaryService.uploadFile(foto, 'freelas');
+      dto.urlFoto = result.secure_url;
     }
 
     return await this.freelaService.createFreela(dto);
@@ -77,19 +66,7 @@ export class FreelaController {
   }
 
   @Put('update/:id')
-  @UseInterceptors(
-    FileInterceptor('urlFoto', {
-      storage: diskStorage({
-        destination: './uploads/freelas',
-
-        filename: (req, file, callback) => {
-          const nomeArquivo = Date.now() + extname(file.originalname);
-
-          callback(null, nomeArquivo);
-        },
-      }),
-    }),
-  )
+  @UseInterceptors(FileInterceptor('urlFoto'))
   async updateFreelaById(
     @Param('id') id: string,
 
@@ -100,7 +77,8 @@ export class FreelaController {
     dto: any,
   ) {
     if (foto) {
-      dto.urlFoto = foto.filename;
+      const result = await this.cloudinaryService.uploadFile(foto, 'freelas');
+      dto.urlFoto = result.secure_url;
     }
 
     return this.freelaService.updateFreelaById(id, dto);

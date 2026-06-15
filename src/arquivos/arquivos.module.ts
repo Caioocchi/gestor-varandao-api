@@ -3,6 +3,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Conteudo, ConteudoSchema } from './arquivos.schema';
 import { ArquivosController } from './arquivos.controller';
 import { ArquivosService } from './arquivos.service';
+import { CloudinaryModule } from '../cloudinary/cloudinary.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { ArquivosService } from './arquivos.service';
         schema: ConteudoSchema,
       },
     ]),
+    CloudinaryModule,
   ],
   controllers: [ArquivosController],
   providers: [ArquivosService],
