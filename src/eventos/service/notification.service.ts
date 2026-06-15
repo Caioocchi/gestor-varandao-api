@@ -65,28 +65,25 @@ export class NotificationService {
     }
 
     try {
-      // const message = {
-      //   notification: { title, body },
-      //   tokens: validTokens,
-      // };
-
-      const response = await getMessaging().send({
-        token: validTokens[0],
+      const message = {
         notification: {
           title,
           body,
         },
-      });
+        webpush: {
+          notification: {
+            title,
+            body,
+            requireInteraction: true,
+          },
+        },
+        tokens: validTokens,
+      };
 
-      console.log(response);
-
-      // response.responses.forEach((r, index) => {
-      //   console.log(validTokens[index], r.success, r.error);
-      // });
-
-      // this.logger.log(
-      //   `Notificações enviadas. Sucessos: ${response.successCount}, Falhas: ${response.failureCount}`,
-      // );
+      const response = await getMessaging().sendEachForMulticast(message);
+      this.logger.log(
+        `Notificações enviadas. Sucessos: ${response.successCount}, Falhas: ${response.failureCount}`,
+      );
     } catch (error) {
       this.logger.error('Erro ao enviar mensagens multicast FCM:', error);
     }
