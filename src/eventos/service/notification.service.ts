@@ -65,22 +65,56 @@ export class NotificationService {
     }
 
     try {
+      // const message = {
+      //   notification: {
+      //     title,
+      //     body,
+      //   },
+      //   webpush: {
+      //     notification: {
+      //       title,
+      //       body,
+      //       requireInteraction: true,
+      //     },
+      //   },
+      //   tokens: validTokens,
+      // };
+
       const message = {
+        tokens: validTokens,
+
         notification: {
           title,
           body,
         },
+
         webpush: {
+          headers: {
+            Urgency: 'high',
+          },
           notification: {
             title,
             body,
+            icon: '/icons/icon-128x128.png',
+            badge: '/icons/icon-128x128.png',
             requireInteraction: true,
           },
         },
-        tokens: validTokens,
       };
 
       const response = await getMessaging().sendEachForMulticast(message);
+
+      console.log('Success:', response.successCount);
+      console.log('Failure:', response.failureCount);
+
+      response.responses.forEach((item, index) => {
+        console.log({
+          token: validTokens[index],
+          success: item.success,
+          error: item.error?.message,
+          code: item.error?.code,
+        });
+      });
       this.logger.log(
         `Notificações enviadas. Sucessos: ${response.successCount}, Falhas: ${response.failureCount}`,
       );
