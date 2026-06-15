@@ -16,11 +16,32 @@ import { CreateEventoDTO } from '../dto/evento.dto';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../../auth/guards/roles.guard';
 import { Roles } from '../../auth/decorators/roles.decorator';
+import { NotificationService } from '../service/notification.service';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('eventos')
 export class EventosController {
-  constructor(private readonly eventoService: EventoService) {}
+  constructor(
+    private readonly eventoService: EventoService,
+    private readonly notificationService: NotificationService,
+  ) {}
+
+  @Roles('administrador', 'padrao')
+  @Post('teste-notificacao')
+  async testeNotificacao(
+    @Body() body: { token: string; title?: string; body?: string },
+  ) {
+    console.log(
+      'Solicitação de envio de notificação push de teste:',
+      body.token,
+    );
+    await this.notificationService.sendPushNotification(
+      [body.token],
+      body.title || 'Teste de Notificação',
+      body.body || 'Seu PWA está recebendo notificações com sucesso!',
+    );
+    return { success: true };
+  }
 
   @Roles('administrador')
   @Post()

@@ -3,6 +3,7 @@ import { EventoService } from '../service/evento.service';
 import { EventosController } from '../controller/evento.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Evento, EventoSchema } from '../schemas/evento.schema';
+import { NotificationModule } from './notification.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { Evento, EventoSchema } from '../schemas/evento.schema';
         schema: EventoSchema,
       },
     ]),
+    NotificationModule,
   ],
   providers: [EventoService],
   controllers: [EventosController],
