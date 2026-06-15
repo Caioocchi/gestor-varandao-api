@@ -68,12 +68,42 @@ export class AuthService {
     return { message: 'Senha alterada com sucesso' };
   }
 
-  async registerPushToken(userId: string, token: string) {
+  async registerPushToken(userId: string, token: string, deviceType: string) {
     const usuario = await this.userModel.findById(userId);
     if (!usuario) {
       throw new UnauthorizedException('Usuário não encontrado');
     }
+
+    if (!usuario.fcmTokens) {
+      usuario.fcmTokens = [];
+    }
+
+    // Se o token já existir na lista em outro tipo de dispositivo, removemos para evitar duplicidade
+    usuario.fcmTokens = usuario.fcmTokens.filter(
+      (item) => item.token !== token,
+    );
+
+    // Verificar se o dispositivo usado já possui um token salvo
+    const existingDeviceIndex = usuario.fcmTokens.findIndex(
+      (item) => item.deviceType.toLowerCase() === deviceType.toLowerCase(),
+    );
+
+    if (existingDeviceIndex !== -1) {
+      // Se o dispositivo já tem token e o gerado for diferente, sobrescreve
+      if (usuario.fcmTokens[existingDeviceIndex].token !== token) {
+        usuario.fcmTokens[existingDeviceIndex].token = token;
+      }
+    } else {
+      // Caso contrário, adiciona à lista
+      usuario.fcmTokens.push({ deviceType, token });
+    }
+
+    // Salvar token também na propriedade retrocompatível
     usuario.fcmToken = token;
+
+    // Garante que o documento seja marcado como modificado para arrays no mongoose
+    usuario.markModified('fcmTokens');
+
     await usuario.save();
     return { message: 'Token de push registrado com sucesso' };
   }

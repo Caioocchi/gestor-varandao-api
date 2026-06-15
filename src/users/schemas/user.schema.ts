@@ -23,6 +23,17 @@ export class User {
 
   @Prop()
   fcmToken?: string;
+
+  @Prop({
+    type: [
+      {
+        deviceType: { type: String, required: true },
+        token: { type: String, required: true },
+      },
+    ],
+    default: [],
+  })
+  fcmTokens?: { deviceType: string; token: string }[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

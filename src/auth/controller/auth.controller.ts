@@ -54,8 +54,26 @@ export class AuthController {
   @Post('push-token')
   async registerPushToken(
     @Request() req: AuthenticatedRequest,
-    @Body() body: { token: string },
+    @Body() body: { token: string; deviceType?: string },
   ) {
-    return this.authService.registerPushToken(req.user.userId, body.token);
+    const userAgent = req.headers['user-agent'];
+    const deviceType = body.deviceType || this.detectDeviceType(userAgent);
+    return this.authService.registerPushToken(
+      req.user.userId,
+      body.token,
+      deviceType,
+    );
+  }
+
+  private detectDeviceType(userAgent?: string): string {
+    if (!userAgent) return 'Web';
+    const ua = userAgent.toLowerCase();
+    if (ua.includes('android')) return 'Android';
+    if (ua.includes('ipad') || ua.includes('iphone') || ua.includes('ipod'))
+      return 'iOS';
+    if (ua.includes('windows')) return 'Windows';
+    if (ua.includes('macintosh')) return 'Mac';
+    if (ua.includes('linux')) return 'Linux';
+    return 'Web';
   }
 }

@@ -28,9 +28,26 @@ export class CronNotificationService {
 
     // 1. Obter todos os tokens de push cadastrados
     const users = await this.userModel.find({
-      fcmToken: { $exists: true, $ne: '' },
+      $or: [
+        { fcmToken: { $exists: true, $ne: '' } },
+        { fcmTokens: { $exists: true, $not: { $size: 0 } } },
+      ],
     });
-    const tokens = users.map((u) => u.fcmToken).filter((t): t is string => !!t);
+
+    const tokensSet = new Set<string>();
+    for (const u of users) {
+      if (u.fcmToken) {
+        tokensSet.add(u.fcmToken);
+      }
+      if (u.fcmTokens && u.fcmTokens.length > 0) {
+        for (const tObj of u.fcmTokens) {
+          if (tObj.token) {
+            tokensSet.add(tObj.token);
+          }
+        }
+      }
+    }
+    const tokens = Array.from(tokensSet);
 
     if (tokens.length === 0) {
       this.logger.log(
