@@ -18,4 +18,3 @@ import { CronNotificationService } from '../service/cron-notification.service';
   exports: [NotificationService],
 })
 export class NotificationModule {}
-

@@ -30,6 +30,7 @@ import { Roles } from '../../auth/decorators/roles.decorator';
 export class FreelaController {
   constructor(private readonly freelaService: FreelaService) {}
 
+  @Roles('administrador', 'padrao')
   @Get()
   async findAllFreelas(
     @Request() req,

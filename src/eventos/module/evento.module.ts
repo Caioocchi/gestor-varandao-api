@@ -17,4 +17,3 @@ import { Evento, EventoSchema } from '../schemas/evento.schema';
   controllers: [EventosController],
 })
 export class EventosModule {}
-

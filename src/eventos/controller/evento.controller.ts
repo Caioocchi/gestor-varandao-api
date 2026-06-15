@@ -37,6 +37,10 @@ export class EventosController {
   ) {
     const { userId, role, nome } = req.user;
     const firstNome = nome ? nome.split(' ')[0] : undefined;
+    console.log('nome', nome);
+    console.log('userId', userId);
+    console.log('firstNome', firstNome);
+    console.log('role', role);
     if (role === 'padrao') {
       return await this.eventoService.findAllEventos(
         userId,
@@ -75,10 +79,31 @@ export class EventosController {
     return evento;
   }
 
-  @Roles('administrador')
+  @Roles('administrador', 'padrao')
   @Put(':id')
-  async updateEvento(@Param('id') id: string, @Body() dto: CreateEventoDTO) {
-    console.log('id', id);
+  async updateEvento(
+    @Param('id') id: string,
+    @Body() dto: CreateEventoDTO,
+    @Request() req: any,
+  ) {
+    const { userId, role, nome } = req.user;
+    const firstNome = nome ? nome.split(' ')[0] : undefined;
+    const evento = await this.eventoService.findEventoById(id);
+    if (!evento) {
+      return null;
+    }
+    if (role === 'padrao') {
+      if (
+        evento.responsavel !== userId &&
+        evento.responsavel !== nome &&
+        evento.responsavel !== firstNome
+      ) {
+        throw new ForbiddenException(
+          'Você não tem permissão para acessar este evento',
+        );
+      }
+    }
+    console.log('dto', dto);
     return await this.eventoService.updateEvento(id, dto);
   }
 

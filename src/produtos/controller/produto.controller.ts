@@ -20,6 +20,7 @@ import { Roles } from '../../auth/decorators/roles.decorator';
 export class ProdutoController {
   constructor(private readonly produtoService: ProdutoService) {}
 
+  @Roles('administrador', 'padrao')
   @Get()
   async findAll(
     @Query('pagina') pagina: number = 1,
@@ -28,6 +29,7 @@ export class ProdutoController {
     return await this.produtoService.findAll(pagina, pesquisa);
   }
 
+  @Roles('administrador', 'padrao')
   @Get('categoria/:categoria')
   async findByCategoria(@Param('categoria') categoria: string) {
     return await this.produtoService.findByCategoria(categoria);
