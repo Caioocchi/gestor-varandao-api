@@ -21,8 +21,10 @@ export class CronNotificationService {
     private readonly notificationService: NotificationService,
   ) {}
 
-  // Toda segunda e terça-feira às 07:00 da manhã
-  @Cron('0 7 * * 1,2')
+  // Toda segunda e terça-feira às 07:00 da manhã (Horário de Brasília)
+  @Cron('0 7 * * 1,2', {
+    timeZone: 'America/Sao_Paulo',
+  })
   async handleWeeklyNotifications() {
     this.logger.log('Iniciando rotina de notificações agendadas...');
 
@@ -50,15 +52,23 @@ export class CronNotificationService {
       return;
     }
 
+    // Obter data atual no fuso horário 'America/Sao_Paulo'
     const hoje = new Date();
+    const spString = hoje.toLocaleString('en-US', {
+      timeZone: 'America/Sao_Paulo',
+    });
+    const hojeSP = new Date(spString);
 
-    // 2. Notificação 1: Eventos da Semana (considerando domingo como início da semana)
-    const inicioSemana = new Date(hoje);
-    inicioSemana.setDate(hoje.getDate() - hoje.getDay()); // Domingo
+    // 2. Notificação 1: Eventos da Semana (considerando segunda-feira como início da semana)
+    const dayOfWeek = hojeSP.getDay();
+    const diff = dayOfWeek === 0 ? 6 : dayOfWeek - 1; // 0 é domingo (diff 6), 1 é segunda (diff 0), etc.
+
+    const inicioSemana = new Date(hojeSP);
+    inicioSemana.setDate(hojeSP.getDate() - diff);
     inicioSemana.setHours(0, 0, 0, 0);
 
     const fimSemana = new Date(inicioSemana);
-    fimSemana.setDate(inicioSemana.getDate() + 6); // Sábado
+    fimSemana.setDate(inicioSemana.getDate() + 6); // Domingo
     fimSemana.setHours(23, 59, 59, 999);
 
     const formatToYYYYMMDD = (d: Date) => {
@@ -91,8 +101,8 @@ export class CronNotificationService {
     );
 
     // 3. Notificação 2: Aniversário de Freelas (no dia de hoje)
-    const dia = String(hoje.getDate()).padStart(2, '0');
-    const mes = String(hoje.getMonth() + 1).padStart(2, '0');
+    const dia = String(hojeSP.getDate()).padStart(2, '0');
+    const mes = String(hojeSP.getMonth() + 1).padStart(2, '0');
     const diaMesHoje = `${dia}/${mes}`; // formato "DD/MM"
 
     const aniversariantes = await this.freelaModel.find({

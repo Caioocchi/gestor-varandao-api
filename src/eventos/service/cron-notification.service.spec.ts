@@ -94,8 +94,12 @@ describe('CronNotificationService', () => {
 
       // Verify birthday query is called with correct format DD/MM
       const hoje = new Date();
-      const dia = String(hoje.getDate()).padStart(2, '0');
-      const mes = String(hoje.getMonth() + 1).padStart(2, '0');
+      const spString = hoje.toLocaleString('en-US', {
+        timeZone: 'America/Sao_Paulo',
+      });
+      const hojeSP = new Date(spString);
+      const dia = String(hojeSP.getDate()).padStart(2, '0');
+      const mes = String(hojeSP.getMonth() + 1).padStart(2, '0');
       const expectedDiaMes = `${dia}/${mes}`;
       expect(freelaModelMock.find).toHaveBeenCalledWith({
         dt_nascimento: expectedDiaMes,
