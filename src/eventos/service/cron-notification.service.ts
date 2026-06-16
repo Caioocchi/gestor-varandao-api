@@ -21,8 +21,8 @@ export class CronNotificationService {
     private readonly notificationService: NotificationService,
   ) {}
 
-  // Toda segunda-feira às 07:00 da manhã
-  @Cron('0 7 * * 1')
+  // Toda segunda e terça-feira às 07:00 da manhã
+  @Cron('0 7 * * 1,2')
   async handleWeeklyNotifications() {
     this.logger.log('Iniciando rotina de notificações agendadas...');
 
