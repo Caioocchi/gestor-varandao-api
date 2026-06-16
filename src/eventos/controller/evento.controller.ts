@@ -10,13 +10,18 @@ import {
   Request,
   ForbiddenException,
   Query,
+  UseInterceptors,
+  UploadedFile,
+  BadRequestException,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { EventoService } from '../service/evento.service';
 import { CreateEventoDTO } from '../dto/evento.dto';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../../auth/guards/roles.guard';
 import { Roles } from '../../auth/decorators/roles.decorator';
 import { NotificationService } from '../service/notification.service';
+import { CloudinaryService } from '../../cloudinary/cloudinary.service';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('eventos')
@@ -24,6 +29,7 @@ export class EventosController {
   constructor(
     private readonly eventoService: EventoService,
     private readonly notificationService: NotificationService,
+    private readonly cloudinaryService: CloudinaryService,
   ) {}
 
   @Roles('administrador', 'padrao')
@@ -41,6 +47,17 @@ export class EventosController {
       body.body || 'Seu PWA está recebendo notificações com sucesso!',
     );
     return { success: true };
+  }
+
+  @Roles('administrador', 'padrao')
+  @Post('upload-imagem')
+  @UseInterceptors(FileInterceptor('file'))
+  async uploadImagem(@UploadedFile() file: Express.Multer.File) {
+    if (!file) {
+      throw new BadRequestException('Nenhum arquivo enviado');
+    }
+    const uploadRes = await this.cloudinaryService.uploadFile(file, 'eventos');
+    return { url: uploadRes.secure_url };
   }
 
   @Roles('administrador')

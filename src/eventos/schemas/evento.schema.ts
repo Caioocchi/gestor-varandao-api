@@ -108,6 +108,9 @@ export class Evento {
 
   @Prop({ type: [FreelaSchema] })
   freelas?: Freela[];
+
+  @Prop({ type: [String], default: [] })
+  imagens?: string[];
 }
 
 export const EventoSchema = SchemaFactory.createForClass(Evento);

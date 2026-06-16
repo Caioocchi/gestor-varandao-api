@@ -4,7 +4,7 @@ import {
   IsBoolean,
   IsNotEmpty,
   IsNumber,
-  IsObject,
+  IsOptional,
   IsString,
   ValidateNested,
 } from 'class-validator';
@@ -63,4 +63,9 @@ export class CreateEventoDTO {
   @ValidateNested({ each: true })
   @Type(() => CreateEventoItemDto)
   itens?: CreateEventoItemDto[];
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  imagens?: string[];
 }
