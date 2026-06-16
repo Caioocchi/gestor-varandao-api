@@ -63,85 +63,32 @@ export class EventosController {
   @Roles('administrador')
   @Post()
   async createEvento(@Body() dto: CreateEventoDTO) {
-    console.log('dto', dto);
     return await this.eventoService.createEvento(dto);
   }
 
   @Get()
   async findAllEventos(
-    @Request() req: any,
     @Query('data') data?: string,
     @Query('periodo') periodo?: string,
   ) {
-    const { userId, role, nome } = req.user;
-    const firstNome = nome ? nome.split(' ')[0] : undefined;
-    console.log('nome', nome);
-    console.log('userId', userId);
-    console.log('firstNome', firstNome);
-    console.log('role', role);
-    if (role === 'padrao') {
-      return await this.eventoService.findAllEventos(
-        userId,
-        firstNome,
-        data,
-        periodo,
-      );
-    }
-    return await this.eventoService.findAllEventos(
-      undefined,
-      undefined,
-      data,
-      periodo,
-    );
+    return await this.eventoService.findAllEventos(data, periodo);
   }
 
   @Get(':id')
-  async findEventoById(@Param('id') id: string, @Request() req: any) {
-    const { userId, role, nome } = req.user;
-    const firstNome = nome ? nome.split(' ')[0] : undefined;
+  async findEventoById(@Param('id') id: string) {
     const evento = await this.eventoService.findEventoById(id);
     if (!evento) {
       return null;
-    }
-    if (role === 'padrao') {
-      if (
-        evento.responsavel !== userId &&
-        evento.responsavel !== nome &&
-        evento.responsavel !== firstNome
-      ) {
-        throw new ForbiddenException(
-          'Você não tem permissão para acessar este evento',
-        );
-      }
     }
     return evento;
   }
 
-  @Roles('administrador', 'padrao')
   @Put(':id')
-  async updateEvento(
-    @Param('id') id: string,
-    @Body() dto: CreateEventoDTO,
-    @Request() req: any,
-  ) {
-    const { userId, role, nome } = req.user;
-    const firstNome = nome ? nome.split(' ')[0] : undefined;
+  async updateEvento(@Param('id') id: string, @Body() dto: CreateEventoDTO) {
     const evento = await this.eventoService.findEventoById(id);
     if (!evento) {
       return null;
     }
-    if (role === 'padrao') {
-      if (
-        evento.responsavel !== userId &&
-        evento.responsavel !== nome &&
-        evento.responsavel !== firstNome
-      ) {
-        throw new ForbiddenException(
-          'Você não tem permissão para acessar este evento',
-        );
-      }
-    }
-    console.log('dto', dto);
     return await this.eventoService.updateEvento(id, dto);
   }
 
