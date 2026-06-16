@@ -61,3 +61,6 @@ src/test.http
 # Firebase credentials
 firebase-service-account.json
 
+# Test push script
+test-push.ts
+
