@@ -19,7 +19,7 @@ import { CreateFreelaDto } from '../dto/freela.dto';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../../auth/guards/roles.guard';
 import { Roles } from '../../auth/decorators/roles.decorator';
-import { CloudinaryService } from '../../cloudinary/cloudinary.service';
+import { GridFsService } from '../../gridfs/gridfs.service';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Roles('administrador')
@@ -27,7 +27,7 @@ import { CloudinaryService } from '../../cloudinary/cloudinary.service';
 export class FreelaController {
   constructor(
     private readonly freelaService: FreelaService,
-    private readonly cloudinaryService: CloudinaryService,
+    private readonly gridFsService: GridFsService,
   ) {}
 
   @Roles('administrador', 'padrao')
@@ -46,10 +46,11 @@ export class FreelaController {
   async createFreela(
     @UploadedFile() foto: Express.Multer.File,
     @Body() dto: CreateFreelaDto,
+    @Request() req: any,
   ) {
     if (foto) {
-      const result = await this.cloudinaryService.uploadFile(foto, 'freelas');
-      dto.urlFoto = result.secure_url;
+      const result = await this.gridFsService.uploadFile(foto);
+      dto.urlFoto = this.gridFsService.getFileUrl(req, result.id);
     }
 
     return await this.freelaService.createFreela(dto);
@@ -75,10 +76,13 @@ export class FreelaController {
 
     @Body()
     dto: any,
+
+    @Request()
+    req: any,
   ) {
     if (foto) {
-      const result = await this.cloudinaryService.uploadFile(foto, 'freelas');
-      dto.urlFoto = result.secure_url;
+      const result = await this.gridFsService.uploadFile(foto);
+      dto.urlFoto = this.gridFsService.getFileUrl(req, result.id);
     }
 
     return this.freelaService.updateFreelaById(id, dto);

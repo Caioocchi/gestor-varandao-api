@@ -8,17 +8,22 @@ import {
   UploadedFile,
   UseInterceptors,
   BadRequestException,
+  Res,
+  Req,
+  StreamableFile,
+  NotFoundException,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import type { Response } from 'express';
 import { ArquivosService } from './arquivos.service';
 import { CreateWhatsappDto } from './arquivos.dto';
-import { CloudinaryService } from '../cloudinary/cloudinary.service';
+import { GridFsService } from '../gridfs/gridfs.service';
 
 @Controller('arquivos')
 export class ArquivosController {
   constructor(
     private readonly arquivosService: ArquivosService,
-    private readonly cloudinaryService: CloudinaryService,
+    private readonly gridFsService: GridFsService,
   ) {}
 
   /**
@@ -66,18 +71,42 @@ export class ArquivosController {
   @UseInterceptors(FileInterceptor('file'))
   async createArquivo(
     @UploadedFile() file: Express.Multer.File,
+    @Req() req: any,
     @Body('nomeArquivo') nomeArquivo?: string,
   ) {
     if (!file) {
       throw new BadRequestException('Nenhum arquivo enviado');
     }
-    const uploadRes = await this.cloudinaryService.uploadFile(file, 'arquivos');
+    const uploadRes = await this.gridFsService.uploadFile(file);
+    const fileUrl = this.gridFsService.getFileUrl(req, uploadRes.id);
     return await this.arquivosService.createArquivo(
-      uploadRes.secure_url,
+      fileUrl,
       file.mimetype,
       file.size,
       nomeArquivo,
     );
+  }
+
+  /**
+   * Retorna/streams o arquivo físico armazenado no GridFS
+   */
+  @Get('file/:id')
+  async getFile(
+    @Param('id') id: string,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    try {
+      const fileInfo = await this.gridFsService.getFileInfo(id);
+      res.set({
+        'Content-Type': fileInfo.contentType || 'application/octet-stream',
+        'Content-Disposition': `inline; filename="${encodeURIComponent(fileInfo.filename)}"`,
+        'Content-Length': fileInfo.length,
+      });
+      const downloadStream = this.gridFsService.openDownloadStream(id);
+      return new StreamableFile(downloadStream);
+    } catch (error) {
+      throw new NotFoundException('Arquivo não encontrado: ', error);
+    }
   }
 
   /**

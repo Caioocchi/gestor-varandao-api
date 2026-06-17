@@ -1,16 +1,16 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import * as fs from 'fs';
-import * as path from 'path';
 import { Conteudo, ConteudoDocument, TipoConteudo } from './arquivos.schema';
 import { CreateWhatsappDto } from './arquivos.dto';
+import { GridFsService } from '../gridfs/gridfs.service';
 
 @Injectable()
 export class ArquivosService {
   constructor(
     @InjectModel(Conteudo.name)
     private readonly conteudoModel: Model<ConteudoDocument>,
+    private readonly gridFsService: GridFsService,
   ) {}
 
   /**
@@ -96,7 +96,7 @@ export class ArquivosService {
   }
 
   /**
-   * Exclui um registro do banco de dados e remove o arquivo físico correspondente se for do tipo ARQUIVO.
+   * Exclui um registro do banco de dados e remove o arquivo correspondente do GridFS se for do tipo ARQUIVO.
    */
   async deleteById(id: string): Promise<{ success: boolean; message: string }> {
     const doc = await this.conteudoModel.findById(id).exec();
@@ -104,22 +104,12 @@ export class ArquivosService {
       throw new NotFoundException('Conteúdo não encontrado');
     }
 
-    // Se for um arquivo físico, remover o arquivo do disco
+    // Se for um arquivo físico, remover o arquivo do GridFS
     if (doc.tipo === TipoConteudo.ARQUIVO && doc.urlArquivo) {
-      const filename = doc.urlArquivo.replace(/^arquivos\//, '');
-      const filePath = path.join(
-        process.cwd(),
-        'uploads',
-        'arquivos',
-        filename,
-      );
-
-      if (fs.existsSync(filePath)) {
-        try {
-          fs.unlinkSync(filePath);
-        } catch (err) {
-          console.error(`Erro ao deletar arquivo físico: ${filePath}`, err);
-        }
+      const urlParts = doc.urlArquivo.split('/');
+      const gridFsId = urlParts[urlParts.length - 1];
+      if (gridFsId) {
+        await this.gridFsService.deleteFile(gridFsId);
       }
     }
 

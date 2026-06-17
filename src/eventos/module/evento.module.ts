@@ -4,7 +4,7 @@ import { EventosController } from '../controller/evento.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Evento, EventoSchema } from '../schemas/evento.schema';
 import { NotificationModule } from './notification.module';
-import { CloudinaryModule } from '../../cloudinary/cloudinary.module';
+import { GridFsModule } from '../../gridfs/gridfs.module';
 
 @Module({
   imports: [
@@ -15,7 +15,7 @@ import { CloudinaryModule } from '../../cloudinary/cloudinary.module';
       },
     ]),
     NotificationModule,
-    CloudinaryModule,
+    GridFsModule,
   ],
   providers: [EventoService],
   controllers: [EventosController],

@@ -21,7 +21,7 @@ import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../../auth/guards/roles.guard';
 import { Roles } from '../../auth/decorators/roles.decorator';
 import { NotificationService } from '../service/notification.service';
-import { CloudinaryService } from '../../cloudinary/cloudinary.service';
+import { GridFsService } from '../../gridfs/gridfs.service';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('eventos')
@@ -29,7 +29,7 @@ export class EventosController {
   constructor(
     private readonly eventoService: EventoService,
     private readonly notificationService: NotificationService,
-    private readonly cloudinaryService: CloudinaryService,
+    private readonly gridFsService: GridFsService,
   ) {}
 
   @Roles('administrador', 'padrao')
@@ -52,12 +52,15 @@ export class EventosController {
   @Roles('administrador', 'padrao')
   @Post('upload-imagem')
   @UseInterceptors(FileInterceptor('file'))
-  async uploadImagem(@UploadedFile() file: Express.Multer.File) {
+  async uploadImagem(
+    @UploadedFile() file: Express.Multer.File,
+    @Request() req: any,
+  ) {
     if (!file) {
       throw new BadRequestException('Nenhum arquivo enviado');
     }
-    const uploadRes = await this.cloudinaryService.uploadFile(file, 'eventos');
-    return { url: uploadRes.secure_url };
+    const uploadRes = await this.gridFsService.uploadFile(file);
+    return { url: this.gridFsService.getFileUrl(req, uploadRes.id) };
   }
 
   @Roles('administrador')
