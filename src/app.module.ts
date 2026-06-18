@@ -12,6 +12,7 @@ import { SeedService } from './seed.service';
 import { ArquivosModule } from './arquivos/arquivos.module';
 import { NotificationModule } from './eventos/module/notification.module';
 import { FirebaseModule } from './firebase/firebase.module';
+import { NotepadModule } from './notepad/notepad.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { FirebaseModule } from './firebase/firebase.module';
     ArquivosModule,
     NotificationModule,
     FirebaseModule,
+    NotepadModule,
   ],
   providers: [SeedService],
 })
