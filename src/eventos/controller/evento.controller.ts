@@ -71,18 +71,10 @@ export class EventosController {
 
   @Get()
   async findAllEventos(
-    @Request() req: any,
     @Query('data') data?: string,
     @Query('periodo') periodo?: string,
   ) {
-    const { userId, role, nome } = req.user;
-    const isPadrao = role === 'padrao';
-    return await this.eventoService.findAllEventos(
-      isPadrao ? userId : undefined,
-      isPadrao ? nome : undefined,
-      data,
-      periodo,
-    );
+    return await this.eventoService.findAllEventos(data, periodo);
   }
 
   @Get(':id')

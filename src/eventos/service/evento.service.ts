@@ -18,16 +18,10 @@ export class EventoService {
   }
 
   async findAllEventos(
-    userId?: string,
-    userNome?: string,
     dataParam?: string,
     periodo?: string,
   ): Promise<Evento[]> {
     const query: any = {};
-
-    if (userId && userNome) {
-      query.$or = [{ responsavel: userId }, { responsavel: userNome }];
-    }
 
     if (dataParam) {
       const partes = dataParam.split('/').map((p) => p.trim());
