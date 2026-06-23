@@ -22,7 +22,7 @@ export class CronNotificationService {
   ) {}
 
   // Toda segunda e terça-feira às 07:00 da manhã (Horário de Brasília)
-  @Cron('0 7 * * 1,2', {
+  @Cron('0 7 * * 1', {
     timeZone: 'America/Sao_Paulo',
   })
   async handleWeeklyNotifications() {
@@ -100,7 +100,23 @@ export class CronNotificationService {
       corpoEventos,
     );
 
-    // 3. Notificação 2: Aniversário de Freelas (no dia de hoje)
+    this.logger.log('Rotina de notificações semanais concluída.');
+  }
+
+  // Todos os dias às 07:00 da manhã (Horário de Brasília)
+  @Cron('0 8 * * *', {
+    timeZone: 'America/Sao_Paulo',
+  })
+  async handleDailyBirthdayNotifications() {
+    this.logger.log('Iniciando rotina diária de aniversariantes...');
+
+    // Obter data atual no fuso horário 'America/Sao_Paulo'
+    const hoje = new Date();
+    const spString = hoje.toLocaleString('en-US', {
+      timeZone: 'America/Sao_Paulo',
+    });
+    const hojeSP = new Date(spString);
+
     const dia = String(hojeSP.getDate()).padStart(2, '0');
     const mes = String(hojeSP.getMonth() + 1).padStart(2, '0');
     const diaMesHoje = `${dia}/${mes}`; // formato "DD/MM"
@@ -109,18 +125,43 @@ export class CronNotificationService {
       dt_nascimento: diaMesHoje,
     });
 
-    if (aniversariantes.length > 0) {
-      for (const freela of aniversariantes) {
-        await this.notificationService.sendPushNotification(
-          tokens,
-          'Aniversariante do Dia! 🎂',
-          `Hoje é aniversário de ${freela.nome}! Não esqueça de parabenizá-lo(a).`,
-        );
-      }
-    } else {
+    if (aniversariantes.length === 0) {
       this.logger.log('Nenhum freelancer faz aniversário hoje.');
+      return;
     }
 
-    this.logger.log('Rotina de notificações concluída.');
+    // Obter todos os tokens de push cadastrados
+    const users = await this.userModel.find({
+      fcmTokens: { $exists: true, $not: { $size: 0 } },
+    });
+
+    const tokensSet = new Set<string>();
+    for (const u of users) {
+      if (u.fcmTokens && u.fcmTokens.length > 0) {
+        for (const tObj of u.fcmTokens) {
+          if (tObj.token) {
+            tokensSet.add(tObj.token);
+          }
+        }
+      }
+    }
+    const tokens = Array.from(tokensSet);
+
+    if (tokens.length === 0) {
+      this.logger.log(
+        'Nenhum token FCM registrado. Cancelando envio de notificações de aniversário.',
+      );
+      return;
+    }
+
+    for (const freela of aniversariantes) {
+      await this.notificationService.sendPushNotification(
+        tokens,
+        'Aniversariante do Dia! 🎂',
+        `Hoje é aniversário de ${freela.nome}! Não esqueça de parabenizá-lo(a).`,
+      );
+    }
+
+    this.logger.log('Rotina diária de aniversariantes concluída.');
   }
 }

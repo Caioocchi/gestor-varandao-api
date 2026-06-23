@@ -33,11 +33,9 @@ export class FreelaController {
   @Roles('administrador', 'padrao')
   @Get()
   async findAllFreelas(
-    @Request() req,
     @Query('pagina') pagina?: number,
     @Query('pesquisa') pesquisa?: string,
   ) {
-    console.log(req.user);
     return await this.freelaService.findAllFreelas(pagina, pesquisa);
   }
 

@@ -104,17 +104,6 @@ export class NotificationService {
 
       const response = await getMessaging().sendEachForMulticast(message);
 
-      console.log('Success:', response.successCount);
-      console.log('Failure:', response.failureCount);
-
-      response.responses.forEach((item, index) => {
-        console.log({
-          token: validTokens[index],
-          success: item.success,
-          error: item.error?.message,
-          code: item.error?.code,
-        });
-      });
       this.logger.log(
         `Notificações enviadas. Sucessos: ${response.successCount}, Falhas: ${response.failureCount}`,
       );

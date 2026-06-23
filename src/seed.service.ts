@@ -16,19 +16,12 @@ export class SeedService {
   ) {}
 
   async seedProdutos() {
-    console.log('Verificando produtos...');
-
     const total = await this.produtoModel.countDocuments();
 
-    console.log('Total:', total);
-
     if (total > 0) {
-      console.log('Produtos já cadastrados');
       return;
     }
 
     await this.produtoModel.insertMany(produtosPadrao);
-
-    console.log('Produtos inseridos!');
   }
 }

@@ -37,10 +37,6 @@ export class EventosController {
   async testeNotificacao(
     @Body() body: { token: string; title?: string; body?: string },
   ) {
-    console.log(
-      'Solicitação de envio de notificação push de teste:',
-      body.token,
-    );
     await this.notificationService.sendPushNotification(
       [body.token],
       body.title || 'Teste de Notificação',
