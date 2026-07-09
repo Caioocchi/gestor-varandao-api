@@ -14,6 +14,7 @@ import { LoginDto } from '../dto/login.dto';
 import { ChangePasswordDto } from '../dto/change-password.dto';
 
 import { JwtAuthGuard } from '../guards/jwt-auth.guard';
+import { ForgotPasswordDto } from '../dto/forgot-password.dto';
 
 interface AuthenticatedRequest extends ExpressRequest {
   user: {
@@ -48,6 +49,21 @@ export class AuthController {
       dto.senhaAtual,
       dto.novaSenha,
     );
+  }
+
+  @Post('solicitar-token')
+  solicitarTokenDeRecuperacao(@Body() dto: ForgotPasswordDto) {
+    return this.authService.solicitarTokenDeRecuperacao(dto.email);
+  }
+
+  @Post('validar-token')
+  validarToken(@Body() dto: ForgotPasswordDto) {
+    return this.authService.validarTokenDeRecuperacao(dto.token);
+  }
+
+  @Post('forgot-password')
+  forgotPassword(@Body() dto: ForgotPasswordDto) {
+    return this.authService.forgotPassword(dto.novaSenha, dto.token);
   }
 
   @UseGuards(JwtAuthGuard)

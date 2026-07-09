@@ -21,6 +21,12 @@ export class User {
   })
   role!: string;
 
+  @Prop({ default: null })
+  resetToken?: string;
+
+  @Prop({ default: null })
+  resetTokenExpires?: Date;
+
   @Prop({
     type: [
       {
